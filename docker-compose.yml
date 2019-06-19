@@ -1,0 +1,36 @@
+version: '3'
+services:
+ mysql:
+  image: mysql:5.5
+  ports:
+   - "3306:3306"
+  network_mode: host
+  environment:
+   MYSQL_ROOT_PASSWORD: root
+   MYSQL_DATABASE: fooddb
+   MYSQL_USER: app_root
+   MYSQL_PASSWORD: root123
+ user-app:
+  image: spring-image
+  build: userservice/
+  restart: always
+  network_mode: host
+  depends_on:
+   - mysql
+  ports:
+   - "8060:8060"
+ food-app:
+  image: spring-food-image
+  build: favouriteservice/
+  restart: always
+  network_mode: host
+  depends_on:
+   - mysql
+  ports:
+   - "8061:8061"
+ angular:
+  image: angular-image
+  build: NutritionistUI/
+  network_mode: host
+  ports: 
+   - "4200:4200"

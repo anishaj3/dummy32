@@ -1,0 +1,28 @@
+--- 
+before_script: 
+  - "source ./build.sh"
+cache: 
+  paths: 
+    - .m2/repository
+    - target
+image: "maven:3-jdk-8"
+maven-build: 
+  artifacts: 
+    paths: 
+      - target/*.jar
+  script: "mvn package -U"
+  stage: build
+maven-test: 
+  script: "mvn test -B"
+  stage: test
+services: 
+  - "mysql:5.5"
+stages: 
+  - test
+  - build
+variables: 
+  MYSQL_CI_URL: "jdbc:mysql://mysql/fooddb"
+  MYSQL_DATABASE: moviedb
+  MYSQL_PASSWORD: test
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_USER: test
